@@ -6,25 +6,67 @@ import json
 import multiprocessing
 import subprocess
 
+# Modify the following line to preset the command line arguments
+default_input = ["prog.py", "default_test_program.py", "1,0", "0,1"]
+
+# Modify the following parameters to tune the optimization
+coverage_optimization_threshold = 98.0
+coverage_optimization_min_improvement = 1.0
 
 file_name = ""
+string_inputs_def = []
+integer_inputs_def = []
+float_inputs_def = []
+boolean_inputs_def = []
 
-    # Get user input for inputs preferences
+def generateStringInputsDef():
+    generated = []
+
+    generated = ["", "a", "abc def", " abc def", "abcdefghijklmnopqrstuvwxyz"]
+
+    return generated
+    
+def generateIntegerInputsDef():
+    generated = []
+
+    generated = [-sys.maxsize * 2, -1000, -100, -10, -1, 0, 1, 10, 100, 1000, sys.maxsize * 2 + 1]
+
+    generated = [str(i) for i in generated]
+    return generated
+
+def generateFloatInputsDef():
+    generated = []
+
+    generated = [float('-inf'), -1000.0, -100.0, -10.0, -1.0, 0.0, 1.0, 10.0, 100.0, 1000.0, float('inf')]
+
+    generated = [str(i) for i in generated]
+    return generated
+
+def generateBooleanInputsDef():
+    generated = []
+
+    generated = [0, 1]
+
+    generated = [str(i) for i in generated]
+    return generated
+
+    # Parse a comma separated list to a Python list (array)
 def parseArrayInput(string_input):
     string_list = list(string_input.split(','))
     return string_list
 
-    
+    # Run the coverage run command (from coverage.py)
 def coverage(index, file_name, combinations):
     process1 = "coverage run --parallel-mode --context={1} {0} ".format(file_name, index) + ' '.join(j for j in combinations[index])
     subprocess.run(process1)
-    # subprocess.run("coverage json --context={0} -o {0}.json".format(index))
     return
 
+    # Run the coverage json command (from coverage.py)
 def reportJSON(index):
     subprocess.run("coverage json --context={0} -o {0}.json".format(index))
     return
 
+    # Find the next test set that adds the most executed lines to a test suite 
 def findNextBest(current_misses, list_dict):
     next_best_index = -1
     next_best_hits = []
@@ -36,31 +78,35 @@ def findNextBest(current_misses, list_dict):
             next_best_index = i
     return (next_best_index, next_best_hits)
 
+    # Print a report of the coverage optimization in report.txt
+def printReport(coverage, test_suite, hits, hit_lines, misses, missed_lines):
+    f = open("report.txt", "w")
+    f.write("""
+        Test Suite Coverage Optimization
+        -----------------------------------
+
+        Code coverage: {0}
+        With inputs: {1}\n
+        Total lines covered: {2}
+        Lines covered: {3}\n
+        Total lines missed: {4}
+        Lines missing: {5}\n
+    """.format(coverage, test_suite, hits, hit_lines, misses, missed_lines))
+    f.close()
+    return
+
 
 if __name__ == '__main__':
-    # Global variables
-    default_input = ["prog.py", "test.py", "1,0", "0,1"]
-    directory = "json_files"
-    inputs = sys.argv if (default_input == None) else default_input
 
+    # Use default input if no command line arguments were provided
+    # TODO: Check for command line args, if none then use default
+    inputs = sys.argv if (default_input == None) else default_input
     file_name = sys.argv[1] if (default_input == None) else default_input[1]
 
     args = []
     combinations = []
 
-    # Define list of inputs to test for path coverage
-    # Here, only simple data types were tested. A wider listing of data types would be required for this program 
-    # to be of use to a program using more complex data types (arrays of strings, arrays of integers, etc.)
-
-    string_inputs_def = ["", "a", "abc def", " abc def", "abcdefghijklmnopqrstuvwxyz"]
-    integer_inputs_def = [-sys.maxsize * 2, -1000, -100, -10, -1, 0, 1, 10, 100, 1000, sys.maxsize * 2 + 1]
-    float_inputs_def = [float('-inf'), -1000.0, -100.0, -10.0, -1.0, 0.0, 1.0, 10.0, 100.0, 1000.0, float('inf')]
-    boolean_inputs_def = [0, 1]
-
-    integer_inputs_def = [str(i) for i in integer_inputs_def]
-    float_inputs_def = [str(i) for i in float_inputs_def]
-    boolean_inputs_def = [str(i) for i in boolean_inputs_def]
-
+    # iterate through the set of inputs and add them to the list of arguments (all their possible values are stored here)
     for i in range(2, len(inputs)):
         input_type = inputs[i]
         if (input_type == "string"):
@@ -74,42 +120,39 @@ if __name__ == '__main__':
         else:
             args.append(parseArrayInput(inputs[i]))
 
-
-    # Produce the combinations of all the different arguments
+    # Produce the combinations of all the different arguments (ex: [[1,0],[0,1]] -> [[1,0], [1,1], [0,0], [0,1]])
     combinations = list(itertools.product(*args))
     combinations = [list(x) for x in combinations]
 
-    # Create file 'combinations.txt' with one combination per line
-    with open('combinations.txt', 'w') as f:
-        for sub_lst in combinations:
-            line = ','.join(str(e) for e in sub_lst)
-            f.write("%s\n" % line)
-
-    # Launch parallelization
+    # Parallelization: Run the coverage of the input program with all the test combinations
     threads = []
     for i in range(len(combinations)):
         p = multiprocessing.Process(target=coverage, args=(i, file_name, combinations,))
         threads.append(p)
         p.start()
 
+    # Wait for all threads to complete their task
     for p in threads:
         p.join()
 
+    # Combine all the coverage analysis produced by the threads
     subprocess.run("coverage combine")
 
+    # Parallelization: Produce the reports of the coverage
     threads = []
     for i in range(len(combinations)):
         p = multiprocessing.Process(target=reportJSON, args=(i,))
         threads.append(p)
         p.start()
 
+    # Wait for all threads to complete their task
     for p in threads:
         p.join()
 
-    # fetch all coverage results
+    #Ffetch all coverage results
     lst_coverage = ['{0}.json'.format(i) for i in range(len(combinations))]
 
-    # load all json files to dictionaries
+    # Load all JSON files to dictionaries
     lst_dict = []
     for cov in lst_coverage:
         json_name = cov
@@ -117,13 +160,14 @@ if __name__ == '__main__':
             cov_dict = json.load(f)
             lst_dict.append(cov_dict)
 
+    # Delete the report files
     for i in range(len(combinations)):
         os.remove('{0}.json'.format(i))
     os.remove('.coverage')
 
-    # Get best code coverage
+    # Get best code coverage's test combination
     i = 0
-    biggest_cov = [None, None, [], []] # percentage, index, missing lines
+    biggest_cov = [None, None, [], []] # biggest_cov = [percentage, index, missing_lines, hit_lines]
     for cov in lst_dict:
         if ((biggest_cov[0] == None and biggest_cov[1] == None) or (cov["totals"]["percent_covered"] > biggest_cov[0])):
             biggest_cov[0] = cov["totals"]["percent_covered"]
@@ -141,7 +185,7 @@ if __name__ == '__main__':
     current_misses = biggest_cov[2]
     current_hits = biggest_cov[3]
 
-    while ((current_coverage < 98.0) and (current_coverage - previous_coverage > 1.0)):
+    while ((current_coverage < coverage_optimization_threshold) and (current_coverage - previous_coverage > coverage_optimization_min_improvement)):
 
         # nextBest: [index, new_hits]
         nextBest = findNextBest(current_misses, lst_dict)
@@ -154,7 +198,7 @@ if __name__ == '__main__':
         current_coverage = len(current_hits) / (len(current_hits) + len(current_misses))
         
 
-    # Print test suite
+    # Format results
     test_suite = []
     for x in best_test_suite_indexes:
         test_suite.append(combinations[x])
@@ -162,16 +206,5 @@ if __name__ == '__main__':
     current_hits.sort()
     current_misses.sort()
 
-    f = open("report.txt", "w")
-    f.write("""
-        Test Suite Coverage Optimization
-        -----------------------------------
-
-        Code coverage: {0}
-        With inputs: {1}\n
-        Total lines covered: {2}
-        Lines covered: {3}\n
-        Total lines missed: {4}
-        Lines missing: {5}\n
-    """.format(len(current_hits)/len(current_hits+current_misses), test_suite, len(current_hits), current_hits, len(current_misses), current_misses))
-    f.close()
+    # Print report
+    printReport(len(current_hits)/len(current_hits+current_misses), test_suite, len(current_hits), current_hits, len(current_misses), current_misses)
