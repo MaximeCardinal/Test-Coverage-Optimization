@@ -8,12 +8,12 @@ import subprocess
 import time
 
 # Modify the following line to preset the command line arguments
-default_input = ["prog.py", "default_test_program.py", "float", "float", "float"]
+default_input = ["prog.py", "default_test_program.py", "float", "float"]
 
 # Modify the following parameters to tune the optimization
 coverage_optimization_threshold = 98.0
 coverage_optimization_min_improvement = 1.0
-nbr_threads = 4 # bounded by the number of cores
+nbr_threads = 1 # bounded by the number of cores
 
 file_name = ""
 string_inputs_def = []
@@ -113,9 +113,15 @@ if __name__ == '__main__':
     args = []
     combinations = []
 
+    string_inputs_def = generateStringInputsDef()
+    integer_inputs_def = generateIntegerInputsDef()
+    float_inputs_def = generateFloatInputsDef()
+    boolean_inputs_def = generateBooleanInputsDef()
+
     # iterate through the set of inputs and add them to the list of arguments (all their possible values are stored here)
     for i in range(2, len(inputs)):
         input_type = inputs[i]
+        print(input_type)
         if (input_type == "string"):
             args.append(string_inputs_def)
         elif (input_type == "integer"):
@@ -161,6 +167,7 @@ if __name__ == '__main__':
     for p in threads:
         p.join()
     print("--- %s seconds ---" % (time.time() - start_time))
+    print(len(combinations))
 
     #Ffetch all coverage results
     lst_coverage = ['{0}.json'.format(i) for i in range(len(combinations))]
