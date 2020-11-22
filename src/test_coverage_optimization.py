@@ -5,13 +5,15 @@ import os
 import json
 import multiprocessing
 import subprocess
+import time
 
 # Modify the following line to preset the command line arguments
-default_input = ["prog.py", "default_test_program.py", "1,0", "0,1"]
+default_input = ["prog.py", "default_test_program.py", "1,0,4,5,6,7", "0,1,5,6,7,8,9,10"]
 
 # Modify the following parameters to tune the optimization
 coverage_optimization_threshold = 98.0
 coverage_optimization_min_improvement = 1.0
+nbr_threads = 4 # bounded by the number of cores
 
 file_name = ""
 string_inputs_def = []
@@ -56,14 +58,19 @@ def parseArrayInput(string_input):
     return string_list
 
     # Run the coverage run command (from coverage.py)
-def coverage(index, file_name, combinations):
-    process1 = "coverage run --parallel-mode --context={1} {0} ".format(file_name, index) + ' '.join(j for j in combinations[index])
-    subprocess.run(process1)
+def coverage(index, file_name, combinations, threadIndex):
+    while(threadIndex[index] < len(combinations)):
+        # print(threadIndex[index])
+        process1 = "coverage run --parallel-mode --context={1} {0} ".format(file_name, index) + ' '.join(j for j in combinations[threadIndex[index]])
+        subprocess.run(process1)
+        threadIndex[index] = threadIndex[index] + nbr_threads
     return
 
     # Run the coverage json command (from coverage.py)
-def reportJSON(index):
-    subprocess.run("coverage json --context={0} -o {0}.json".format(index))
+def reportJSON(index, combinations, threadIndex):
+    while(threadIndex[index] < len(combinations)):
+        subprocess.run("coverage json --context={0} -o {0}.json".format(threadIndex[index]))
+        threadIndex[index] = threadIndex[index] + nbr_threads
     return
 
     # Find the next test set that adds the most executed lines to a test suite 
@@ -124,10 +131,13 @@ if __name__ == '__main__':
     combinations = list(itertools.product(*args))
     combinations = [list(x) for x in combinations]
 
+    start_time = time.time()
     # Parallelization: Run the coverage of the input program with all the test combinations
     threads = []
-    for i in range(len(combinations)):
-        p = multiprocessing.Process(target=coverage, args=(i, file_name, combinations,))
+    threadIndex = []
+    for i in range(nbr_threads):
+        threadIndex.append(i)
+        p = multiprocessing.Process(target=coverage, args=(i, file_name, combinations, threadIndex,))
         threads.append(p)
         p.start()
 
@@ -140,14 +150,17 @@ if __name__ == '__main__':
 
     # Parallelization: Produce the reports of the coverage
     threads = []
-    for i in range(len(combinations)):
-        p = multiprocessing.Process(target=reportJSON, args=(i,))
+    threadIndex = []
+    for i in range(nbr_threads):
+        threadIndex.append(i)
+        p = multiprocessing.Process(target=reportJSON, args=(i, combinations, threadIndex,))
         threads.append(p)
         p.start()
 
     # Wait for all threads to complete their task
     for p in threads:
         p.join()
+    print("--- %s seconds ---" % (time.time() - start_time))
 
     #Ffetch all coverage results
     lst_coverage = ['{0}.json'.format(i) for i in range(len(combinations))]
