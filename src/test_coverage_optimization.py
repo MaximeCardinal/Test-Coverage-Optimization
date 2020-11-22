@@ -8,7 +8,7 @@ import subprocess
 import time
 
 # Modify the following line to preset the command line arguments
-default_input = ["prog.py", "default_test_program.py", "1,0,4,5,6,7", "0,1,5,6,7,8,9,10"]
+default_input = ["prog.py", "default_test_program.py", "float", "float", "float"]
 
 # Modify the following parameters to tune the optimization
 coverage_optimization_threshold = 98.0

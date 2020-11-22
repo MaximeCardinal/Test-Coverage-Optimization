@@ -3,7 +3,7 @@ import sys
 import math
 
 def test():
-    if (len(sys.argv) != 3):
+    if (len(sys.argv) != 4):
         print("Wrong number of arguments.")
         return 
 
@@ -31,7 +31,7 @@ def test():
         result = result + math.pi**2**2 - math.atan2(0.015, .99)
         result = math.abs(result)
         result = sqrt(result) / (result % 9999999)
-        for i in range(100000):
+        for i in range(1000):
             result = result + 1
     else:
         biggest = number2
