@@ -20,7 +20,7 @@ Coverage.py (Ver. 5.3) [Link](https://coverage.readthedocs.io/en/coverage-5.3/)
 
 Command line:
 
-    python test_coverage_optimization.py *path_to_program* *arg1* *arg2* *arg3* *...*
+    python test_coverage_optimization.py path_to_program arg1 arg2 arg3 ...
 
 *path_to_program* : Path to python program on which the optimization will be performed<br/>
 
@@ -28,7 +28,7 @@ Command line:
 
 ### Examples
 
-Python program: "/MyFolder/program.py"
+Python program: "/MyFolder/program.py"<br/>
 Inputs: "string" "integer" "boolean"<br/>
 
 Example 1 (default inputs):
