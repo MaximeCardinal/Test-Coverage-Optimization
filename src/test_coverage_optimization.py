@@ -23,30 +23,30 @@ boolean_inputs_def = []
 
 def generateStringInputsDef():
     generated = []
-
+    # Could be greatly improved to cover more cases
     generated = ["", "a", "abc def", " abc def", "abcdefghijklmnopqrstuvwxyz"]
 
     return generated
     
 def generateIntegerInputsDef():
     generated = []
-
-    generated = [-sys.maxsize * 2, -1000, -100, -10, -1, 0, 1, 10, 100, 1000, sys.maxsize * 2 + 1]
+    # Could be greatly improved to cover more cases
+    generated = [-sys.maxsize * 2, -100000, -10000, -1000, -100, -10, -1, 0, 1, 10, 100, 1000, 10000, 100000, sys.maxsize * 2 + 1]
 
     generated = [str(i) for i in generated]
     return generated
 
 def generateFloatInputsDef():
     generated = []
-
-    generated = [float('-inf'), -1000.0, -100.0, -10.0, -1.0, 0.0, 1.0, 10.0, 100.0, 1000.0, float('inf')]
+    # Could be greatly improved to cover more cases
+    generated = [float('-inf'), -100000.0, -1000.0, -100.0, -10.0, -1.0, 0.0, 1.0, 10.0, 100.0, 1000.0, 100000.0, float('inf')]
 
     generated = [str(i) for i in generated]
     return generated
 
 def generateBooleanInputsDef():
     generated = []
-
+    # Could be greatly improved to cover more cases
     generated = [0, 1]
 
     generated = [str(i) for i in generated]
