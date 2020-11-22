@@ -13,7 +13,7 @@ default_input = ["prog.py", "default_test_program.py", "float", "float", "oh,hi,
 # Modify the following parameters to tune the optimization
 coverage_optimization_threshold = 98.0
 coverage_optimization_min_improvement = 1.0
-nbr_threads = 1 # bounded by the number of cores
+nbr_threads = 4 # bounded by the number of cores
 
 file_name = ""
 string_inputs_def = []
@@ -121,40 +121,6 @@ if __name__ == '__main__':
     # iterate through the set of inputs and add them to the list of arguments (all their possible values are stored here)
     for i in range(2, len(inputs)):
         input_type = inputs[i]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        print(input_type)
         if (input_type == "string"):
             args.append(string_inputs_def)
         elif (input_type == "integer"):
