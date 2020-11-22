@@ -1,5 +1,5 @@
 import itertools
-from multiprocessing.process import current_process
+import multiprocessing
 import sys
 import os
 import json

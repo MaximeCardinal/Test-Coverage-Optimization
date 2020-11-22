@@ -20,11 +20,11 @@ Coverage.py (Ver. 5.3) [Link](https://coverage.readthedocs.io/en/coverage-5.3/)
 
 Command line:
 
-   python test_coverage_optimization.py *path_to_program* *arg1* *arg2* *arg3* *...*
+    python test_coverage_optimization.py *path_to_program* *arg1* *arg2* *arg3* *...*
 
 *path_to_program* : Path to python program on which the optimization will be performed<br/>
 
-*arg1*,*arg2*,*arg3*,*...*: List of the types of arguments of the program on which the optimization will be performed. Possible values are: string, integer, float, boolean. It is also possible to specify a specific list of inputs rather than its type for an argument. The format is a comma separated list of the possible inputs. Ex:  "3,4,5".
+*arg1*, *arg2*, *arg3*, *...* : List of the types of arguments of the program on which the optimization will be performed. Possible values are: string, integer, float, boolean. It is also possible to specify a specific list of inputs rather than its type for an argument. The format is a comma separated list of the possible inputs. Ex:  "3,4,5".
 
 ### Examples
 
