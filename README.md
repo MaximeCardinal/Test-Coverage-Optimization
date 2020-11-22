@@ -1,12 +1,12 @@
 # Test-Coverage-Optimization
 
-Final project ECSE-420 Fall2020
+Final project ECSE-420 Fall2020<br/>
 
-Group Members:
-    * Alexa Normandin   [GitHub](https://github.com/alexnorms)
-    * Alexis Franche    [GitHub](https://github.com/alexisfranche)
-    * Maxime Cardinal   [GitHub](https://github.com/MaximeCardinal)
-    * Oliver Murphy     [GitHub](https://github.com/OliverMurphy)
+Group Members:<br/>
+* Alexa Normandin   [GitHub](https://github.com/alexnorms)<br/>
+* Alexis Franche    [GitHub](https://github.com/alexisfranche)<br/>
+* Maxime Cardinal   [GitHub](https://github.com/MaximeCardinal)<br/>
+* Oliver Murphy     [GitHub](https://github.com/OliverMurphy)<br/>
 
 ## Project Description:
 
@@ -18,16 +18,18 @@ Coverage.py (Ver. 5.3) [Link](https://coverage.readthedocs.io/en/coverage-5.3/)
 
 ## Arguments
 
-python test_coverage_optimization.py *path_to_program* *arg1* *arg2* *arg3* *...*
+Command line:
 
-*path_to_program* : Path to python program on which the optimization will be performed
+   python test_coverage_optimization.py *path_to_program* *arg1* *arg2* *arg3* *...*
+
+*path_to_program* : Path to python program on which the optimization will be performed<br/>
 
 *arg1*,*arg2*,*arg3*,*...*: List of the types of arguments of the program on which the optimization will be performed. Possible values are: string, integer, float, boolean. It is also possible to specify a specific list of inputs rather than its type for an argument. The format is a comma separated list of the possible inputs. Ex:  "3,4,5".
 
 ### Examples
 
 Python program: "/MyFolder/program.py"
-Inputs: "string" "integer" "boolean"
+Inputs: "string" "integer" "boolean"<br/>
 
 Example 1 (default inputs):
 
