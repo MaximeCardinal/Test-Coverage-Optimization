@@ -8,7 +8,7 @@ import subprocess
 import time
 
 # Modify the following line to preset the command line arguments
-default_input = ["prog.py", "default_test_program.py", "float", "float"]
+default_input = ["prog.py", "default_test_program.py", "float", "float", "oh,hi,mark"]
 
 # Modify the following parameters to tune the optimization
 coverage_optimization_threshold = 98.0
@@ -121,6 +121,39 @@ if __name__ == '__main__':
     # iterate through the set of inputs and add them to the list of arguments (all their possible values are stored here)
     for i in range(2, len(inputs)):
         input_type = inputs[i]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         print(input_type)
         if (input_type == "string"):
             args.append(string_inputs_def)
