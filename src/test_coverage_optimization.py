@@ -8,7 +8,8 @@ import subprocess
 import time
 
 # Modify the following line to preset the command line arguments
-default_input = ["prog.py", "default_test_program.py", "float", "float", "oh,hi,mark"]
+# default_input = ["prog.py", "default_test_program.py", "float", "float", "oh,hi,mark"]
+default_input = ["prog.py", "default_test_program2.py", "1.1,1.2,1.3", "4.7,0.3,3.8"]
 
 # Modify the following parameters to tune the optimization
 coverage_optimization_threshold = 98.0
@@ -165,10 +166,9 @@ if __name__ == '__main__':
     # Wait for all threads to complete their task
     for p in threads:
         p.join()
-    print("--- %s seconds ---" % (time.time() - start_time))
-    print(len(combinations))
+    print("--- Done. Did {0} combinations in {1} seconds ---".format(len(combinations), time.time() - start_time))
 
-    #Ffetch all coverage results
+    # Fetch all coverage results
     lst_coverage = ['{0}.json'.format(i) for i in range(len(combinations))]
 
     # Load all JSON files to dictionaries
@@ -186,7 +186,7 @@ if __name__ == '__main__':
 
     # Get best code coverage's test combination
     i = 0
-    biggest_cov = [None, None, [], []] # biggest_cov = [percentage, index, missing_lines, hit_lines]
+    biggest_cov = [None, None, [], []] # [percentage, index, missing_lines, hit_lines]
     for cov in lst_dict:
         if ((biggest_cov[0] == None and biggest_cov[1] == None) or (cov["totals"]["percent_covered"] > biggest_cov[0])):
             biggest_cov[0] = cov["totals"]["percent_covered"]
