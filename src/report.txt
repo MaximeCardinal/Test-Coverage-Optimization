@@ -2,13 +2,13 @@
         Test Suite Coverage Optimization
         -----------------------------------
 
-        Code coverage: 0.9285714285714286
-        With inputs: [['1.1', '4.7'], ['1.3', '3.8']]
+        Code coverage: 0.8571428571428571
+        With inputs: [['1', '2'], ['1', '2']]
 
-        Total lines covered: 13
-        Lines covered: [1, 2, 4, 5, 7, 8, 10, 12, 14, 16, 19, 20, 22]
+        Total lines covered: 12
+        Lines covered: [1, 2, 4, 5, 7, 10, 12, 14, 16, 19, 20, 22]
 
-        Total lines missed: 1
-        Lines missing: [17]
+        Total lines missed: 2
+        Lines missing: [8, 17]
 
     

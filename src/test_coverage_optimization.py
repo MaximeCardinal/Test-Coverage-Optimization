@@ -8,8 +8,8 @@ import subprocess
 import time
 
 # Modify the following line to preset the command line arguments
-# default_input = ["prog.py", "default_test_program.py", "float", "float", "oh,hi,mark"]
-default_input = ["prog.py", "default_test_program2.py", "1.1,1.2,1.3", "4.7,0.3,3.8"]
+# demo_input = ["prog.py", "demo_test_program.py", "float", "float", "oh,hi,mark"]
+demo_input = ["prog.py", "demo_test_program2.py", "1.1,1.2,1.3", "4.7,0.3,3.8"]
 
 # Modify the following parameters to tune the optimization
 coverage_optimization_threshold = 98.0
@@ -106,10 +106,10 @@ def printReport(coverage, test_suite, hits, hit_lines, misses, missed_lines):
 
 if __name__ == '__main__':
 
-    # Use default input if no command line arguments were provided
-    # TODO: Check for command line args, if none then use default
-    inputs = sys.argv if (default_input == None) else default_input
-    file_name = sys.argv[1] if (default_input == None) else default_input[1]
+    # Use demo input if no command line arguments were provided
+    # TODO: Check for command line args, if none then use demo
+    inputs = sys.argv if (len(sys.argv) > 1) else demo_input
+    file_name = sys.argv[1] if (len(sys.argv) > 1) else demo_input[1]
 
     args = []
     combinations = []
